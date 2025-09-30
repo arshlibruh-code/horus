@@ -30,8 +30,8 @@ horus is my attempt to build that.
 
 1. **Clone and setup**
    ```bash
-   git clone https://github.com/yourusername/11labs.git
-   cd 11labs
+   git clone https://github.com/arshlibruh-code/horus.git
+   cd horus
    ```
 
 2. **Add your API keys to config.js**
