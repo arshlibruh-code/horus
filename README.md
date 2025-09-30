@@ -1,112 +1,74 @@
 # horus - Highly Organized Response Utility System
 
-An advanced AI assistant with realistic voice and thinking audio capabilities, built with ElevenLabs v3 and Perplexity AI.
+Building my own JARVIS - a personal AI that will eventually manage my entire digital life.
 
-## 🎯 Features
+## The Vision
 
-- **Realistic Voice**: ElevenLabs v3 with emotional audio tags
-- **Thinking Audio**: Human-like "hmm, um, let me think..." sounds
-- **JARVIS-style Personality**: Confident, witty, and efficient responses
-- **Dynamic Audio Tags**: Context-aware emotional expressions
-- **Professional Architecture**: Clean, modular codebase
+I want my own JARVIS. Not just another chatbot, but a real AI companion that:
+- Controls my devices and manages my digital world
+- Helps me create and build things
+- Handles my routine tasks and organization
+- Learns my patterns and grows with me
+- Feels like talking to a real person
 
-## 🚀 Quick Start
+This is the foundation for that dream.
 
-1. **Clone the repository**
+## Why I'm Building This
+
+Current AI assistants suck. They're cold, impersonal, and can't actually help manage your life. I want something that feels human and can actually take care of my digital existence.
+
+horus is my attempt to build that.
+
+## What It Does Now
+
+- **AI Chat**: Real-time streaming chat with emotional responses
+- **Voice**: ElevenLabs v3 with emotional audio tags
+- **Visualization**: Audio-reactive orb that shows AI "thinking"
+- **Multiple Agents**: Different AI personalities to choose from
+
+## Quick Start
+
+1. **Clone and setup**
    ```bash
    git clone https://github.com/yourusername/11labs.git
    cd 11labs
    ```
 
-2. **Set up API keys**
+2. **Add your API keys to config.js**
    ```bash
-   npm run setup
-   # Edit config.js with your actual API keys
+   # Add ELEVENLABS_API_KEY and PERPLEXITY_API_KEY
    ```
 
-3. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-4. **Run the application**
+3. **Run it**
    ```bash
    npx serve .
    ```
 
-5. **Open in browser**
-   ```
-   http://localhost:3000
-   ```
+4. **Open http://localhost:8000**
 
-## 🔧 Configuration
+## The JARVIS Dream
 
-### API Keys Required:
-- **ElevenLabs API Key**: For text-to-speech with v3 model
-- **Perplexity API Key**: For AI responses
+Eventually, horus will:
+- **Manage My Digital World**: Control my devices, manage my files, handle my communications
+- **Help Me Create**: Assist with coding, writing, design, and creative projects
+- **Learn My Patterns**: Understand my preferences, anticipate my needs
+- **Grow With Me**: Become more capable and personalized over time
+- **Feel Human**: Emotional intelligence, personality, and genuine companionship
 
-### Environment Variables:
-```bash
-ELEVENLABS_API_KEY=your_elevenlabs_key_here
-PERPLEXITY_API_KEY=your_perplexity_key_here
-```
+This is just the beginning of building my personal AI companion.
 
-## 🎵 Audio Features
+## Files
 
-### Voice Settings:
-- **Model**: ElevenLabs v3 (alpha)
-- **Voice**: Liam (TX3LPaxmHKxFdv7VOQHJ)
-- **Audio Tags**: [excited], [chuckles], [whispers], [laughs], etc.
+- `index.html` - The interface
+- `script.js` - All the AI logic
+- `style.css` - Styling and animations
+- `orb.js` - Audio-reactive visualization
+- `config.js` - API keys
 
-### Thinking Audio:
-- **Pre-recorded thinking sounds** for instant feedback
-- **Context-aware thinking** based on query type
-- **Human-like processing** with "hmm, um, let me think..."
+## License
 
-## 🏗️ Architecture
-
-```
-11labs/
-├── index.html          # Main interface
-├── script.js           # Core AI logic
-├── style.css           # Styling
-├── instruction.json    # AI personality config
-├── config.js           # API configuration
-└── README.md           # Documentation
-```
-
-## 🎭 Personality System
-
-The AI personality is configured in `instruction.json`:
-- **System Prompt**: JARVIS-style instructions
-- **Audio Tags**: Emotional expressions
-- **Response Style**: Professional yet witty
-
-## 🔒 Security
-
-- **API keys** are stored in `.env` (gitignored)
-- **No sensitive data** in the repository
-- **Environment-based configuration**
-
-## 🚀 Future Features
-
-- [ ] Real-time conversation
-- [ ] Multiple voice personalities
-- [ ] Custom thinking audio library
-- [ ] Voice command integration
-- [ ] System control capabilities
-
-## 📝 License
-
-MIT License - feel free to use and modify!
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+MIT - do whatever you want with it.
 
 ---
 
-**Built with ❤️ using ElevenLabs v3 and Perplexity AI**
+**Building my own JARVIS, one step at a time.**

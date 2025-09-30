@@ -10,72 +10,229 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif;
+    font-family: 'Quantico', monospace;
+    position: relative;
+}
+
+.orb-canvas {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    filter: blur(100px);
+    opacity: 0.6;
+    pointer-events: none;
+    border-radius: 50%;
 }
 
 .container {
     width: 400px;
-    height: 600px;
-    background: #1a1a1a;
-    border-radius: 10px;
+    background: #0a0a0a63;
     display: flex;
     flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.04, 1);
+    backdrop-filter: blur(90px);
+    border: 1px solid #333;
+}
+
+.container.ai-mode {
+    height: 600px;
 }
 
 .chatbox {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 8px;
+}
+
+.controls {
+    margin-bottom: 8px;
+}
+
+.controls label {
+    display: block;
+    color: #ccc;
+    font-size: 10px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.controls.horizontal {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.controls.horizontal label {
+    margin-bottom: 0;
+}
+
+.controls.horizontal select {
+    flex: 1;
+}
+
+.controls.horizontal button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    font-size: 14px;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 4px;
+    border: none;
+    background: #333;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.dropdown:hover {
+    background: #444;
+}
+
+.dropdown:focus {
+    outline: none;
+    background: #444;
+}
+
+.dropdown:disabled {
+    background: #222;
+    color: #666;
+    cursor: not-allowed;
+}
+
+#playBtn {
+    padding: 4px;
+    background: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#playBtn:hover {
+    background: #218838;
+}
+
+.ai-toggle {
+    width: 100%;
+    padding: 4px;
+    text-align: center;
+    background: transparent;
+    border: 2px solid #666;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ai-toggle.active {
+    background: #007bff;
+    border-color: #007bff;
+}
+
+.ai-toggle:hover {
+    border-color: #999;
 }
 
 #messages {
     flex: 1;
     overflow-y: auto;
     color: white;
-    margin-bottom: 20px;
+    border: 1px solid #333;
+    padding: 6px 4px;
+    position: relative;
 }
 
 .message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
+    margin-bottom: 8px;
+    padding: 3px;   
 }
 
 .user-message {
-    background: #333;
-    text-align: right;
+    border-left: 4px solid #007bff;
+    font-size: 11px;
 }
 
-.bot-message {
-    background: #444;
+.ai-message {
+    border-left: 4px solid #969696;
+    font-size: 11px;
 }
+
 
 .input-area {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input-area label {
+    color: #ccc;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.input-area .input-row {
     display: flex;
     gap: 10px;
 }
 
+/* Hide send button in AI mode */
+.container.ai-mode #sendBtn {
+    display: none;
+}
+
+.container.ai-mode .input-row {
+    gap: 0;
+}
+
 #messageInput {
     flex: 1;
-    padding: 10px;
+    padding: 10px 2px;
     border: none;
-    border-radius: 5px;
-    background: #333;
+    background: #33333300;
     color: white;
+    outline: none;
+}
+
+#messageInput:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
 }
 
 #sendBtn {
     padding: 10px 20px;
-    background: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
 }
 
 #sendBtn:hover {
     background: #0056b3;
+}
+
+.loading-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #007bff;
+    animation: pulse 1.5s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
 }
 
 /* Thinking indicator */

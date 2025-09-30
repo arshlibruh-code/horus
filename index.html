@@ -5,17 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>horus - Highly Organized Response Utility System</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quantico:wght@400;700&display=swap" rel="stylesheet">
     <script src="config.js"></script>
+    <script src="orb.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@latest/dist/axios.min.js"></script>
     <script src="https://unpkg.com/@elevenlabs/elevenlabs-js@latest/dist/elevenlabs.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="chatbox">
+            <div class="controls">
+                <label for="agentSelect">Agent</label>
+                <select id="agentSelect" class="dropdown">
+                    <option value="horus" selected>horus</option>
+                    <option value="liam">liam</option>
+                    <option value="jason">jason</option>
+                    <option value="bruh">bruh</option>
+                    <option value="viraj">viraj</option>
+                </select>
+            </div>
+            <div class="controls horizontal">
+                <label for="textSelect">Response Type</label>
+                <select id="textSelect" class="dropdown">
+                    <option value="greetings" selected>Greetings</option>
+                    <option value="goodbyes">Goodbyes</option>
+                    <option value="happy">Happy</option>
+                    <option value="sad">Sad</option>
+                    <option value="tension">Tension</option>
+                    <option value="excited">Excited</option>
+                    <option value="anxious">Anxious</option>
+                    <option value="thinking">Thinking</option>
+                    <option value="confident">Confident</option>
+                    <option value="surprised">Surprised</option>
+                    <option value="frustrated">Frustrated</option>
+                    <option value="relieved">Relieved</option>
+                    <option value="mysterious">Mysterious</option>
+                    <option value="professional">Professional</option>
+                    <option value="casual">Casual</option>
+                </select>
+                <button id="playBtn" onclick="playSelected()">▶</button>
+            </div>
+            <div class="controls">
+                <div id="aiToggle" class="ai-toggle">AI MODE</div>
+            </div>
             <div id="messages"></div>
             <div class="input-area">
-                <input type="text" id="messageInput" placeholder="Ask me anything...">
-                <button id="sendBtn">Send</button>
+                <div class="input-row">
+                    <input type="text" id="messageInput" placeholder="Ask me anything...">
+                    <button id="sendBtn">Send</button>
+                </div>
             </div>
         </div>
     </div>

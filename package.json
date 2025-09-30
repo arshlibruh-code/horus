@@ -4,7 +4,7 @@
   "description": "AI assistant with realistic voice and thinking audio using ElevenLabs v3",
   "main": "index.html",
   "scripts": {
-    "setup": "cp config.template.js config.js && echo '✅ Config template copied! Now edit config.js with your API keys'",
+    "setup": "cp config.template.js config.js && echo 'Config template copied! Now edit config.js with your API keys'",
     "start": "npx serve .",
     "dev": "npx serve ."
   },
