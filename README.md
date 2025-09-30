@@ -2,6 +2,8 @@
 
 Building my own JARVIS - a personal AI that will eventually manage my entire digital life.
 
+![horus AI Demo](horus-demo.gif)
+
 ## The Vision
 
 I want my own JARVIS. Not just another chatbot, but a real AI companion that:
