@@ -18,26 +18,39 @@ body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.8);
     z-index: -1;
     filter: blur(100px);
-    opacity: 0.6;
+    opacity: 0;
     pointer-events: none;
     border-radius: 50%;
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.orb-canvas.visible {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.2);
+    transition: all 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+}
+
+.orb-canvas.audio-reactive {
+    transform: translate(-50%, -50%) scale(1.5);
+    transition: transform 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .container {
     width: 400px;
+    height: 105px;
     background: #0a0a0a63;
     display: flex;
     flex-direction: column;
-    transition: all 0.4s cubic-bezier(0.42, 0, 0.04, 1);
+    transition: all 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
     backdrop-filter: blur(90px);
-    border: 1px solid #333;
 }
 
 .container.ai-mode {
-    height: 600px;
+    height: 540px;
 }
 
 .chatbox {
@@ -45,6 +58,8 @@ body {
     display: flex;
     flex-direction: column;
     padding: 8px;
+    border: 1px solid;
+    border-image: linear-gradient(45deg, rgba(238, 238, 238, 0.2), rgba(43, 115, 193, 0.3)) 1;
 }
 
 .controls {
@@ -62,7 +77,8 @@ body {
 
 .controls.horizontal {
     display: flex;
-    gap: 8px;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -71,6 +87,26 @@ body {
 }
 
 .controls.horizontal select {
+    flex: 1;
+}
+
+/* Agent dropdown - 200px width */
+#agentSelect {
+    width: 200px;
+    flex: none;
+}
+
+/* Response controls container - 200px total */
+.response-controls {
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.response-controls select {
     flex: 1;
 }
 
@@ -85,15 +121,15 @@ body {
     width: 100%;
     padding: 4px;
     border: none;
-    background: #333;
+    background: #3333336f;
     color: white;
-    font-size: 12px;
+    font-size: 11px;
     cursor: pointer;
     transition: background 0.2s ease;
 }
 
 .dropdown:hover {
-    background: #444;
+    background: #444444b6;
 }
 
 .dropdown:focus {
@@ -101,23 +137,26 @@ body {
     background: #444;
 }
 
-.dropdown:disabled {
-    background: #222;
-    color: #666;
-    cursor: not-allowed;
+/* Hidden dropdown in AI mode */
+.dropdown[style*="display: none"] {
+    display: none !important;
 }
 
 #playBtn {
-    padding: 4px;
-    background: #28a745;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
     color: white;
     border: none;
+    border-radius: 0;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 10px;
+    transition: all 0.3s ease;
 }
 
 #playBtn:hover {
-    background: #218838;
+    background: #0056b3;
+    transform: scale(1.1);
 }
 
 .ai-toggle {
@@ -125,7 +164,6 @@ body {
     padding: 4px;
     text-align: center;
     background: transparent;
-    border: 2px solid #666;
     color: white;
     font-size: 12px;
     cursor: pointer;
@@ -134,18 +172,22 @@ body {
 
 .ai-toggle.active {
     background: #007bff;
-    border-color: #007bff;
+}
+.ai-toggle.active:hover {
+    background: #0051a8;
 }
 
 .ai-toggle:hover {
-    border-color: #999;
+    background: #ffffff13;
 }
 
 #messages {
     flex: 1;
+    max-height: 405px;
     overflow-y: auto;
     color: white;
-    border: 1px solid #333;
+    border: 1px solid;
+    border-image: linear-gradient(45deg, rgba(238, 238, 238, 0.2), rgba(43, 115, 193, 0.3)) 1;
     padding: 6px 4px;
     position: relative;
 }
@@ -170,6 +212,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    font-size: 11px;
 }
 
 .input-area label {
@@ -200,6 +243,7 @@ body {
     background: #33333300;
     color: white;
     outline: none;
+    font-size: 11px;
 }
 
 #messageInput:focus {
@@ -224,15 +268,26 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 4px;
-    background: #007bff;
-    animation: pulse 1.5s ease-in-out infinite;
+    height: 120px;
+    background: transparent;
     z-index: 10;
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 100;
 }
 
-@keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+.loading-indicator.visible {
+    opacity: 1;
+}
+
+@keyframes wave {
+    0% { height: 5px; }
+    15% { height: 40px; }
+    25% { height: 20px; }
+    35% { height: 40px; }
+    50% { height: 5px; }
+    100% { height: 5px; }
 }
 
 /* Thinking indicator */
@@ -248,4 +303,95 @@ body {
     0% { opacity: 0.1; }
     50% { opacity: 0.7; }
     100% { opacity: 0.1; }
+}
+
+/* Audio Player */
+.audio-player {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px;
+    border: 1px solid;
+    border-image: linear-gradient(45deg, rgba(238, 238, 238, 0.2), rgba(43, 115, 193, 0.3)) 1;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+}
+
+.audio-player.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.audio-progress {
+    flex: 1;
+    height: 2px;
+    background: #333;
+    cursor: pointer;
+    position: relative;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background: #007bff;
+    width: 0%;
+    position: relative;
+    transition: width 0.1s linear;
+}
+
+.audio-progress-bar::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: rgba(0, 123, 255, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.audio-progress:hover .audio-progress-bar::after {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.2);
+}
+
+.replay-btn {
+    width: 24px;
+    height: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 6px;
+    transition: all 0.3s ease;
+}
+
+.replay-btn:hover {
+    background: #0056b3;
+    transform: scale(1.1);
+}
+
+.download-btn {
+    width: 24px;
+    height: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 6px;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #1e7e34;
+    transform: scale(1.1);
 }

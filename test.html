@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Testing</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 5px;
+        }
+        button {
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        button:hover {
+            background: #555;
+        }
+        #output {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Module Testing Console</h1>
+    
+    <div class="test-section">
+        <h3>Audio Module Tests</h3>
+        <button onclick="testAudioGeneration()">Test Audio Generation</button>
+        <button onclick="testMultipleAudio()">Test Multiple Audio</button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Complete Workflow</h3>
+        <button onclick="testCompleteWorkflow()">Test Complete Workflow</button>
+        <button onclick="clearOutput()">Clear Output</button>
+    </div>
+    
+    <div id="output"></div>
+
+    <!-- Load dependencies -->
+    <script src="config.js"></script>
+    
+    <!-- Load modules (no hardcoded duplicates) -->
+    <script src="audio.js"></script>
+    <script src="ai.js"></script>
+    
+    <script>
+        // Override console.log to show in our output div
+        const originalLog = console.log;
+        const originalError = console.error;
+        const output = document.getElementById('output');
+        
+        function addToOutput(message, type = 'log') {
+            const div = document.createElement('div');
+            div.style.color = type === 'error' ? '#ff4444' : '#00ff00';
+            div.textContent = message;
+            output.appendChild(div);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToOutput(args.join(' '));
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToOutput(args.join(' '), 'error');
+        };
+        
+        // Test functions
+        
+        async function testAudioGeneration() {
+            console.log('\n=== TESTING AUDIO GENERATION ===');
+            try {
+                const testText = 'Hello there!';
+                const voiceId = AudioModule.voices.liam;
+                const agent = 'liam';
+                console.log('Generating audio for:', testText);
+                const audioBuffer = await AudioModule.generateSpeech(testText, voiceId, agent);
+                console.log('Audio buffer generated, size:', audioBuffer.byteLength, 'bytes');
+                
+                // Test playback
+                console.log('Starting audio playback...');
+                await AudioModule.playAudio(audioBuffer);
+                console.log('Audio playback completed!');
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+        
+        async function testMultipleAudio() {
+            console.log('\n=== TESTING MULTIPLE AUDIO ===');
+            try {
+                const sentences = [
+                    '[deep inhale] hey hey heyyyyy there! How you doing motherfucker! [breaths] Ready when you are! [breathes] [phew], [clap] Lets do this! [phew] [humming] [humming] [breathing] [humming] [breathing] [humming] [quite] [humming] [hmm hmm hmm hmmmmmm] [humming continous] [confused] koi input daal na bhai, aise kaise chalega [sighs] '
+                ];
+                const voiceId = AudioModule.voices.liam;
+                const agent = 'liam';
+                console.log('Generating audio for', sentences.length, 'sentences with emotional tags (5 at a time)');
+                console.log('Sentences:', sentences);
+                
+                // Use streaming audio playback for optimal performance
+                console.log('Starting streaming audio playback...');
+                await AudioModule.streamingAudioPlayback(sentences, voiceId, agent);
+                console.log('Streaming audio playback completed!');
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+        
+        async function testCompleteWorkflow() {
+            console.log('\n=== TESTING COMPLETE WORKFLOW (NEW AI) - 3 COMPLEXITY LEVELS ===');
+            
+            const testCases = [
+                { input: 'hey there', complexity: 'BASIC' },
+                { input: 'explain how machine learning works', complexity: 'MEDIUM' },
+                { input: 'describe the detailed process of photosynthesis including light-dependent and light-independent reactions', complexity: 'COMPLEX' }
+            ];
+            
+            try {
+                for (let i = 0; i < testCases.length; i++) {
+                    const { input, complexity } = testCases[i];
+                    console.log(`\n--- TEST ${i + 1}/3: ${complexity} COMPLEXITY ---`);
+                    console.log('User Input:', input);
+                    
+                    // Step 1: Get AI response using new airesponse.js
+                    console.log('Step 1: Getting AI response...');
+                    const aiResponse = await AI.getAIResponse(input);
+                    console.log('AI Response:', aiResponse);
+                    
+                    // Step 2: Split into sentences for audio
+                    console.log('Step 2: Splitting into sentences...');
+                    const sentences = aiResponse.split('\n').filter(line => line.trim().startsWith('-')).map(line => line.trim().substring(2));
+                    console.log('Sentences:', sentences);
+                    
+                    // Step 3: Generate and play audio with streaming
+                    console.log('Step 3: Starting streaming audio playback...');
+                    const voiceId = 'TX3LPaxmHKxFdv7VOQHJ';
+                    const agent = 'liam';
+                    
+                    await AudioModule.streamingAudioPlayback(
+                        sentences, 
+                        voiceId, 
+                        agent
+                    );
+                    console.log(`${complexity} test completed!`);
+                }
+                
+                console.log('\n=== ALL TESTS COMPLETE ===');
+                console.log('Complete workflow test successful!');
+                
+            } catch (error) {
+                console.error('Error:', error.message);
+            }
+        }
+        
+        function clearOutput() {
+            output.innerHTML = '';
+        }
+        
+        // Auto-run basic tests on load
+        window.addEventListener('load', () => {
+            console.log('Module Testing Console Loaded');
+            console.log('Click buttons to run tests');
+            
+            // Initialize audio player for testing
+            if (typeof AudioModule !== 'undefined') {
+                AudioModule.initAudioPlayer();
+            }
+        });
+    </script>
+    
+    <!-- Audio Player UI (hidden for testing) -->
+    <div id="audioPlayer" style="display: none;">
+        <button id="replayBtn">▶</button>
+        <div class="audio-progress">
+            <div id="progressBar"></div>
+        </div>
+    </div>
+</body>
+</html>

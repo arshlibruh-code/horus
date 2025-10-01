@@ -8,17 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Quantico:wght@400;700&display=swap" rel="stylesheet">
     <script src="config.js"></script>
     <script src="orb.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@latest/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/@elevenlabs/elevenlabs-js@latest/dist/elevenlabs.min.js"></script>
+    <script src="ai.js"></script>
+    <script src="audio.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+    <!-- <script src="https://unpkg.com/@elevenlabs/elevenlabs-js@latest/dist/elevenlabs.min.js"></script> -->
 </head>
 <body>
     <div class="container">
         <div class="chatbox">
-            <div class="controls">
+            <div class="controls horizontal">
                 <label for="agentSelect">Agent</label>
                 <select id="agentSelect" class="dropdown">
-                    <option value="horus" selected>horus</option>
-                    <option value="liam">liam</option>
+                    <option value="horus">horus</option>
+                    <option value="liam" selected>liam</option>
                     <option value="jason">jason</option>
                     <option value="bruh">bruh</option>
                     <option value="viraj">viraj</option>
@@ -26,35 +28,44 @@
             </div>
             <div class="controls horizontal">
                 <label for="textSelect">Response Type</label>
-                <select id="textSelect" class="dropdown">
-                    <option value="greetings" selected>Greetings</option>
-                    <option value="goodbyes">Goodbyes</option>
-                    <option value="happy">Happy</option>
-                    <option value="sad">Sad</option>
-                    <option value="tension">Tension</option>
-                    <option value="excited">Excited</option>
-                    <option value="anxious">Anxious</option>
-                    <option value="thinking">Thinking</option>
-                    <option value="confident">Confident</option>
-                    <option value="surprised">Surprised</option>
-                    <option value="frustrated">Frustrated</option>
-                    <option value="relieved">Relieved</option>
-                    <option value="mysterious">Mysterious</option>
-                    <option value="professional">Professional</option>
-                    <option value="casual">Casual</option>
-                </select>
-                <button id="playBtn" onclick="playSelected()">▶</button>
+                <div class="response-controls">
+                    <select id="textSelect" class="dropdown">
+                        <option value="greetings" selected>Greetings</option>
+                        <option value="goodbyes">Goodbyes</option>
+                        <option value="happy">Happy</option>
+                        <option value="sad">Sad</option>
+                        <option value="tension">Tension</option>
+                        <option value="excited">Excited</option>
+                        <option value="anxious">Anxious</option>
+                        <option value="thinking">Thinking</option>
+                        <option value="confident">Confident</option>
+                        <option value="surprised">Surprised</option>
+                        <option value="frustrated">Frustrated</option>
+                        <option value="relieved">Relieved</option>
+                        <option value="mysterious">Mysterious</option>
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                    <button id="playBtn" onclick="playSelected()">▶</button>
+                </div>
             </div>
             <div class="controls">
                 <div id="aiToggle" class="ai-toggle">AI MODE</div>
             </div>
-            <div id="messages"></div>
-            <div class="input-area">
+            <div id="messages" style="display: none;"></div>
+            <div class="input-area" style="display: none;">
                 <div class="input-row">
-                    <input type="text" id="messageInput" placeholder="Ask me anything...">
+                    <input type="text" id="messageInput" placeholder="Ask me anything..." autocomplete="off" spellcheck="false">
                     <button id="sendBtn">Send</button>
                 </div>
             </div>
+        </div>
+        <div class="audio-player" id="audioPlayer" style="display: none;">
+            <div class="audio-progress">
+                <div class="audio-progress-bar" id="progressBar"></div>
+            </div>
+            <button id="replayBtn" class="replay-btn">▶</button>
+            <button id="downloadBtn" class="download-btn">⬇</button>
         </div>
     </div>
     <script src="script.js"></script>

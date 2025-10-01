@@ -1,4 +1,5 @@
 // Simple Perlin noise function
+// Higher values = more random, lower values = smoother
 function noise(x, y) {
     const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
     return (n - Math.floor(n));
@@ -36,49 +37,54 @@ class Orb {
         this.targetOpacity = 1;
         this.scale = 1;
         this.targetScale = 1;
+        // Spring physics
+        this.opacityVelocity = 0;
+        this.scaleVelocity = 0;
+        this.springTension = 0.4;
+        this.springDamping = 0.4;
         this.init();
     }
     init() {
         // Create canvas
         this.canvas = document.createElement('canvas');
         this.canvas.className = 'orb-canvas';
-        this.canvas.width = 600;
-        this.canvas.height = 800;
+        this.canvas.width = 500;
+        this.canvas.height = 700;
         // Add to body
         document.body.appendChild(this.canvas);
         this.ctx = this.canvas.getContext('2d');
         this.animate();
+        
+        // Add visible class after a small delay to allow transition
+        setTimeout(() => {
+            this.canvas.classList.add('visible');
+        }, 10);
     }
     setAudioIntensity(intensity) {
         this.audioIntensity = intensity;
     }
     setScale(scale) {
-        this.targetScale = scale;
+        if (scale > 1.3) {
+            this.canvas.classList.add('audio-reactive');
+        } else {
+            this.canvas.classList.remove('audio-reactive');
+        }
     }
     animate() {
-        this.time += 0.01;
-        // Smooth opacity fade in
-        if (this.opacity < this.targetOpacity) {
-            this.opacity += 0.02;
-            if (this.opacity > this.targetOpacity) {
-                this.opacity = this.targetOpacity;
-            }
-        }
-        // Smooth scale animation (faster for more responsiveness)
-        if (this.scale < this.targetScale) {
-            this.scale += 0.15; // Faster animation
-            if (this.scale > this.targetScale) {
-                this.scale = this.targetScale;
-            }
-        } else if (this.scale > this.targetScale) {
-            this.scale -= 0.15; // Faster animation
-            if (this.scale < this.targetScale) {
-                this.scale = this.targetScale;
-            }
-        }
-        // Debug scale changes
-        if (Math.abs(this.scale - this.targetScale) > 0.01) {
-        }
+        this.time += 0.005; // Slowed down 2x
+        
+        // Spring physics for opacity
+        const opacityForce = (this.targetOpacity - this.opacity) * this.springTension;
+        this.opacityVelocity += opacityForce;
+        this.opacityVelocity *= this.springDamping;
+        this.opacity += this.opacityVelocity;
+        
+        // Spring physics for scale
+        const scaleForce = (this.targetScale - this.scale) * this.springTension;
+        this.scaleVelocity += scaleForce;
+        this.scaleVelocity *= this.springDamping;
+        this.scale += this.scaleVelocity;
+        
         this.draw();
         this.animationId = requestAnimationFrame(() => this.animate());
     }
@@ -97,15 +103,42 @@ class Orb {
         // Create image data
         const imageData = ctx.createImageData(width, height);
         const data = imageData.data;
+        // Perlin noise parameters - tweak these to see effects
+        const spatialScale = 4;          // Higher = more detail, Lower = smoother
+        const timeScale = 1;             // Animation speed multiplier
+        const noiseAmplitude = 0.7 + (this.audioIntensity * 2);       // 0.6 to 1.6 based on audio
+        const noiseOffset = 0;           // Noise base offset
+        const gridDensity = 1;           // Pixel skip (1 = every pixel, 2 = every other pixel)
+        const octaves = 1;              // Number of noise layers
+        const lacunarity = 1.5 + (this.audioIntensity * 10);         // 1.5 to 2.5 based on audio
+        const persistence = 0.5 + (this.audioIntensity * 5);         // Amplitude multiplier between octaves
+        
         // Generate noise
-        for (let x = 0; x < width; x++) {
-            for (let y = 0; y < height; y++) {
-                const nx = x / width * 4;
-                const ny = y / height * 4;
-                const nt = this.time;
-                // Add audio intensity
-                const intensity = this.audioIntensity * 0.5;
-                const n = perlin(nx, ny + nt) + (intensity * 0.5); // Audio affects noise intensity
+        for (let x = 0; x < width; x += gridDensity) {
+            for (let y = 0; y < height; y += gridDensity) {
+                const nx = x / width * spatialScale;        // Spatial frequency
+                const ny = y / height * spatialScale;      // Spatial frequency
+                const nt = this.time * timeScale;          // Time frequency
+                
+                // Single octave noise
+                let n = perlin(nx, ny + nt) * noiseAmplitude + noiseOffset;
+                
+                // Multi-octave fractal noise (if octaves > 1)
+                if (octaves > 1) {
+                    let total = 0;
+                    let frequency = 1;
+                    let amplitude = 1;
+                    let maxValue = 0;
+                    
+                    for (let i = 0; i < octaves; i++) {
+                        let noiseValue = perlin(nx * frequency, (ny + nt) * frequency);
+                        total += noiseValue * amplitude;
+                        maxValue += amplitude;
+                        amplitude *= persistence;
+                        frequency *= lacunarity;
+                    }
+                    n = (total / maxValue) * noiseAmplitude + noiseOffset;
+                }
                 const value = Math.max(0, Math.min(1, n));
                 const index = (y * width + x) * 4;
                 const alpha = value * 255 * this.opacity * (1 + this.audioIntensity); // Audio affects brightness
@@ -124,7 +157,12 @@ class Orb {
             cancelAnimationFrame(this.animationId);
         }
         if (this.canvas && this.canvas.parentNode) {
-            this.canvas.parentNode.removeChild(this.canvas);
+            this.canvas.classList.remove('visible');
+            setTimeout(() => {
+                if (this.canvas && this.canvas.parentNode) {
+                    this.canvas.parentNode.removeChild(this.canvas);
+                }
+            }, 600); // Wait for CSS transition
         }
     }
     reset() {
@@ -132,6 +170,8 @@ class Orb {
         this.targetOpacity = 1;
         this.scale = 1;
         this.targetScale = 1;
+        this.opacityVelocity = 0;
+        this.scaleVelocity = 0;
     }
 }
 // Global orb instance
@@ -160,4 +200,42 @@ function destroyOrb() {
         orb.destroy();
         orb = null;
     }
+}
+
+// Perlin loading animation
+function startPerlinLoading(container) {
+  const canvas = document.createElement('canvas');
+  canvas.width = container.offsetWidth;
+  canvas.height = container.offsetHeight;
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  canvas.style.filter = 'blur(32px)';
+  container.appendChild(canvas);
+  
+  const ctx = canvas.getContext('2d');
+  let time = 0;
+  let animationId;
+  
+  function animate() {
+    time += 0.01; // 2x speed up for loading indicator
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Generate Perlin wave
+    for (let x = 0; x < canvas.width; x++) {
+      const nx = x / canvas.width * 6;  // Higher = more waves, Lower = smoother
+      const ny = time;                   // Animation speed
+      const n = perlin(nx, ny);
+      const y = (n * 0.5 + 0.5) * canvas.height;  // Higher multiplier = bigger waves
+      
+      ctx.fillStyle = `rgba(0, 123, 255, ${0.3 + n * 0.4})`;  // Base opacity + wave intensity
+      ctx.fillRect(x, y, 1, canvas.height - y);
+    }
+    
+    animationId = requestAnimationFrame(animate);
+  }
+  
+  animate();
+  
+  // Store animation ID for cleanup
+  container._perlinAnimation = animationId;
 }
