@@ -4,28 +4,7 @@ Building my own JARVIS - a personal AI that will eventually manage my entire dig
 
 ![horus AI Demo](assets/demos/horus-demo.gif)
 
-## Listen to horus in Action
-
-Experience horus AI responses with different emotional tones and personalities:
-
-### Recent AI Responses
-<audio controls>
-  <source src="assets/audio/horus-response-2025-10-01T21-05-48.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-*Latest horus response - Professional tone*
-
-<audio controls>
-  <source src="assets/audio/horus-response-2025-10-01T21-05-26.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-*AI response with emotional context*
-
-<audio controls>
-  <source src="assets/audio/horus-response-2025-10-01T21-04-25.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-*Longer AI conversation with streaming*
+**[Download Audio Samples](assets/audio/)** - Hear horus AI responses with different emotional tones
 
 ## The Vision
 
@@ -48,31 +27,18 @@ horus is my attempt to build that.
 
 - **AI Chat**: Real-time streaming chat with emotional responses
 - **Voice**: ElevenLabs v3 with emotional audio tags and streaming playback
+- **Audio Download**: Download AI responses as MP3 files
 - **Visualization**: Audio-reactive orb that shows AI "thinking"
 - **Multiple Agents**: Different AI personalities to choose from
 - **Modular Architecture**: Clean separation of AI, audio, and UI logic
-- **Testing Suite**: Comprehensive module testing for development
 
-## Current Progress
+## What's Planned
 
-### Recently Completed (Latest Update)
-- **Modular Architecture**: Refactored monolithic code into clean, focused modules
-- **Streaming AI Responses**: Real-time text display with Perplexity integration
-- **Audio-Reactive Visualization**: Orb responds dynamically to voice patterns
-- **Enhanced Voice System**: ElevenLabs v3 with emotional audio tags
-- **Development Tools**: Comprehensive testing suite and module validation
-- **Performance Optimization**: Response caching and smooth animations
-
-### In Progress
-- Fine-tuning audio-visual synchronization
-- Expanding AI agent personalities
-- Improving error handling and edge cases
-
-### Next Steps
-- Device integration capabilities
-- File management features
-- Advanced learning algorithms
-- Multi-modal interactions (voice + text + visual)
+- **Memory System**: Remember conversations and preferences
+- **File Management**: Read, organize, and manage your files
+- **System Control**: Basic computer automation (open apps, manage windows)
+- **Email Integration**: Read and manage your emails
+- **Calendar Assistant**: Schedule and manage your time
 
 ## Quick Start
 
